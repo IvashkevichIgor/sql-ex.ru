@@ -1,9 +1,8 @@
-/* Найдите максимальную цену ПК, выпускаемых каждым производителем,
- * у которого есть модели в таблице PC.
- * Вывести: maker, максимальная цена. */
+/* Найдите производителей, выпускающих по меньшей мере три различных модели ПК.
+ * Вывести: Maker, число моделей ПК. */
 
-SELECT maker, MAX(price)
+SELECT maker, COUNT(DISTINCT model) AS models_tally
   FROM product
-       JOIN pc
-       ON (product.model = pc.model)
+ WHERE type = 'PC'
  GROUP BY maker
+HAVING COUNT(DISTINCT model) >= 3;
