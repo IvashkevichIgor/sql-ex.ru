@@ -3,7 +3,7 @@
  * (учесть корабли из таблицы Outcomes). */
 
 WITH max_guns_classes AS
-     (SELECT CLASS
+     (SELECT class
         FROM classes AS c
              JOIN
              (SELECT MAX(numGuns) AS max_guns, displacement 
@@ -14,7 +14,7 @@ WITH max_guns_classes AS
                    AND mgd.max_guns IS NULL))
             AND c.displacement = mgd.displacement
                 OR (c.displacement IS NULL
-                   AND mgd.displacement IS NULL)))
+                   AND mgd.displacement IS NULL))
 SELECT name
   FROM ships AS s
  WHERE class IN (SELECT *
