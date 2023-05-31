@@ -2,27 +2,21 @@
  * среди всех имеющихся кораблей такого же водоизмещения 
  * (учесть корабли из таблицы Outcomes). */
 
-WITH max_guns_classes AS
-     (SELECT class
-        FROM classes AS c
-             JOIN
-             (SELECT MAX(numGuns) AS max_guns, displacement 
-                FROM classes
-               GROUP BY displacement) AS mgd
-             ON (c.numguns = mgd.max_guns
-                OR (c.numguns IS NULL
-                   AND mgd.max_guns IS NULL))
-             AND (c.displacement = mgd.displacement
-                 OR (c.displacement IS NULL
-                    AND mgd.displacement IS NULL)))
+WITH nnd AS (SELECT name, numGuns, displacement
+               FROM classes AS c
+                    JOIN ships AS s
+                    ON c."class" = s."class"
+       
+              UNION
+ 
+             SELECT ship, numGuns, displacement
+               FROM classes AS c
+                    JOIN outcomes AS o
+                    ON c."class" = o.ship)                  
 SELECT name
-  FROM ships AS s
- WHERE class IN (SELECT *
-                   FROM max_guns_classes)
- 
- UNION 
- 
-SELECT ship
-  FROM outcomes AS o
- WHERE ship IN (SELECT *
-                  FROM max_guns_classes);              
+  FROM nnd
+       JOIN (SELECT MAX(numGuns) AS max_guns, displacement 
+               FROM nnd
+              GROUP BY displacement) AS mgd
+                    ON nnd.numguns = mgd.max_guns
+                    AND nnd.displacement = mgd.displacement;
