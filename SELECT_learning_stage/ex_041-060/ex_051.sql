@@ -12,9 +12,9 @@ WITH max_guns_classes AS
              ON (c.numguns = mgd.max_guns
                 OR (c.numguns IS NULL
                    AND mgd.max_guns IS NULL))
-            AND c.displacement = mgd.displacement
-                OR (c.displacement IS NULL
-                   AND mgd.displacement IS NULL))
+             AND (c.displacement = mgd.displacement
+                 OR (c.displacement IS NULL
+                    AND mgd.displacement IS NULL)))
 SELECT name
   FROM ships AS s
  WHERE class IN (SELECT *
@@ -25,4 +25,4 @@ SELECT name
 SELECT ship
   FROM outcomes AS o
  WHERE ship IN (SELECT *
-                  FROM max_guns_classes);
+                  FROM max_guns_classes);              
